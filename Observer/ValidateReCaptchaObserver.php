@@ -70,8 +70,9 @@ class ValidateReCaptchaObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         $controller = $observer->getControllerAction();
-        $from = $controller->getForm();
-        if ($reCaptchaType = $from->getRecaptchaType()) {
+        $form = $controller->getForm();
+        if ($reCaptchaType = $form->getRecaptchaType()) {
+
             $request = $controller->getRequest();
             $response = $controller->getResponse();
 

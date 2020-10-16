@@ -20,24 +20,26 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         $form = $observer->getEvent()->getForm();
-        $dataObject = $observer->getEvent()->getDataObject();
-        $widgetBlock = $observer->getEvent()->getWidgetBlock();
+        if ($form->getRecaptchaType()) {
+            $dataObject = $observer->getEvent()->getDataObject();
+            $widgetBlock = $observer->getEvent()->getWidgetBlock();
 
-        $children = $dataObject->getUiComponentChildren();
+            $children = $dataObject->getUiComponentChildren();
 
-        $recaptchaBlock = $widgetBlock->addChild(
-            'recaptcha',
-            \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
-        );
-        $recaptchaBlock->setWidgetForm($form);
+            $recaptchaBlock = $widgetBlock->addChild(
+                'recaptcha',
+                \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
+            );
+            $recaptchaBlock->setWidgetForm($form);
 
-        $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
-        $reCaptchaComponents = $reCaptchaJSON['components'];
+            $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
+            $reCaptchaComponents = $reCaptchaJSON['components'];
 
-        foreach ($reCaptchaComponents as $componentId => $component) {
-            $children[$componentId] = $component;
+            foreach ($reCaptchaComponents as $componentId => $component) {
+                $children[$componentId] = $component;
+            }
+
+            $dataObject->setUiComponentChildren($children);
         }
-
-        $dataObject->setUiComponentChildren($children);
     }
 }
