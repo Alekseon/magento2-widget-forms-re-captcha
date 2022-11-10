@@ -5,6 +5,8 @@
  */
 namespace Alekseon\WidgetFormsReCaptcha\Block;
 
+use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
+use Alekseon\WidgetFormsReCaptcha\Model\CaptchaConfigProvider;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
 use Magento\ReCaptchaUi\Model\IsCaptchaEnabledInterface;
@@ -15,7 +17,7 @@ use Magento\ReCaptchaUi\Model\IsCaptchaEnabledInterface;
  */
 class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento\Widget\Block\BlockInterface
 {
-    protected $_template =  'Magento_ReCaptchaFrontendUi::recaptcha.phtml';
+    protected $_template = 'Magento_ReCaptchaFrontendUi::recaptcha.phtml';
     /**
      * @var
      */
@@ -24,6 +26,10 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
      * @var \Alekseon\WidgetFormsReCaptcha\Model\UiConfigResolver
      */
     protected $captchaUiConfigResolver;
+    /**
+     * @var CaptchaConfigProvider
+     */
+    protected $captchaConfigProvider;
 
     /**
      * ReCaptcha constructor.
@@ -38,10 +44,12 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
         \Alekseon\WidgetFormsReCaptcha\Model\UiConfigResolver $captchaUiConfigResolver,
         IsCaptchaEnabledInterface $isCaptchaEnabled,
         Json $serializer,
+        CaptchaConfigProvider $captchaConfigProvider,
         array $data = []
     )
     {
         $this->captchaUiConfigResolver = $captchaUiConfigResolver;
+        $this->captchaConfigProvider = $captchaConfigProvider;
         parent::__construct($context, $captchaUiConfigResolver, $isCaptchaEnabled, $serializer, $data);
     }
 
@@ -83,7 +91,10 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
      */
     public function getCaptchaUiConfig(): array
     {
-        $uiConfig = $this->captchaUiConfigResolver->getByType($this->getRecaptchaType());
+        $uiConfig = [];
+        if ($this->getRecaptchaType() !== ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+            $uiConfig = $this->captchaUiConfigResolver->getByType($this->getRecaptchaType());
+        }
         return $uiConfig;
     }
 
@@ -92,15 +103,33 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
      */
     public function getJsLayout()
     {
-        $this->jsLayout =
-            [
-                'components' =>
-                    [
-                        'recaptcha' => [
-                            'component' => 'Magento_ReCaptchaFrontendUi/js/reCaptcha'
+        if ($this->getRecaptchaType() == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+            $this->jsLayout =
+                [
+                    'components' =>
+                        [
+                            'recaptcha' => [
+                                'component' => 'Alekseon_WidgetFormsReCaptcha/js/view/checkout/widgetFormCaptcha',
+                                'formId' => 'alekseon_widget_form_' . $this->widgetForm->getId(),
+                                'configSource' => 'alekseon_widget_form',
+                                'alekseon_widget_form' => [
+                                    'captcha' => $this->captchaConfigProvider->getConfig(),
+                                ],
+                            ]
                         ]
-                    ]
-            ];
+                ];
+        } else {
+            $this->jsLayout =
+                [
+                    'components' =>
+                        [
+                            'recaptcha' => [
+                                'component' => 'Magento_ReCaptchaFrontendUi/js/reCaptcha'
+                            ]
+                        ]
+                ];
+        }
+
         return parent::getJsLayout();
     }
 

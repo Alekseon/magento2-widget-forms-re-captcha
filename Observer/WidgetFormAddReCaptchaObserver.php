@@ -23,7 +23,6 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
         if ($form->getRecaptchaType()) {
             $dataObject = $observer->getEvent()->getDataObject();
             $widgetBlock = $observer->getEvent()->getWidgetBlock();
-
             $children = $dataObject->getUiComponentChildren();
 
             $recaptchaBlock = $widgetBlock->addChild(
