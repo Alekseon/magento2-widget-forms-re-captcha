@@ -99,6 +99,6 @@ class CaptchaConfigProvider
      */
     protected function getCaptchaModel()
     {
-        return $this->captchaData->getCaptcha('user_login');
+        return $this->captchaData->getCaptcha('alekseon_widget_form');
     }
 }
