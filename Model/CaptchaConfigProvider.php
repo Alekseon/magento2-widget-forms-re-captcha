@@ -28,7 +28,7 @@ class CaptchaConfigProvider
      */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Captcha\Helper\Data $captchaData,
+        \Magento\Captcha\Helper\Data $captchaData
     ) {
         $this->storeManager = $storeManager;
         $this->captchaData = $captchaData;
@@ -67,6 +67,10 @@ class CaptchaConfigProvider
      */
     protected function isRequired()
     {
+        if (!$this->captchaData->getConfig('enable')) {
+            return false;
+        }
+
         return true;
     }
 
