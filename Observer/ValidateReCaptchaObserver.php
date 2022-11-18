@@ -93,6 +93,10 @@ class ValidateReCaptchaObserver implements ObserverInterface
         $formId = 'alekseon_widget_form_' . $form->getId();
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
 
+        if (!$this->captchaHelper->getConfig('enable')) {
+            return false;
+        }
+
         if (!$captchaModel->isCorrect($request->getPost("captcha_string"))) {
             $this->errorProcessor->processError(
                 $response,

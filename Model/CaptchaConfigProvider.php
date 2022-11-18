@@ -19,19 +19,19 @@ class CaptchaConfigProvider
     /**
      * @var \Magento\Captcha\Helper\Data
      */
-    protected $captchaData;
+    protected $captchaHelper;
 
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Captcha\Helper\Data $captchaData
+     * @param \Magento\Captcha\Helper\Data $captchaHelper
      * @param array $formIds
      */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Captcha\Helper\Data $captchaData
+        \Magento\Captcha\Helper\Data $captchaHelper
     ) {
         $this->storeManager = $storeManager;
-        $this->captchaData = $captchaData;
+        $this->captchaHelper = $captchaHelper;
     }
 
     /**
@@ -67,7 +67,7 @@ class CaptchaConfigProvider
      */
     protected function isRequired()
     {
-        if (!$this->captchaData->getConfig('enable')) {
+        if (!$this->captchaHelper->getConfig('enable')) {
             return false;
         }
 
@@ -103,6 +103,6 @@ class CaptchaConfigProvider
      */
     protected function getCaptchaModel()
     {
-        return $this->captchaData->getCaptcha('alekseon_widget_form');
+        return $this->captchaHelper->getCaptcha('alekseon_widget_form');
     }
 }
