@@ -80,7 +80,7 @@ class ValidateReCaptchaObserver implements ObserverInterface
             if ($reCaptchaType == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
                 $this->validateMagentoCaptcha($form, $request, $response);
             } else {
-                $this->validateUiCaptcha($request, $response);
+                $this->validateUiCaptcha($form, $request, $response);
             }
         }
     }
@@ -106,11 +106,14 @@ class ValidateReCaptchaObserver implements ObserverInterface
     }
 
     /**
-     * @param $controller
+     * @param $form
+     * @param $request
+     * @param $response
      * @throws InputException
      */
-    protected function validateUiCaptcha($request, $response)
+    protected function validateUiCaptcha($form, $request, $response)
     {
+        $reCaptchaType = $form->getRecaptchaType();
         $reCaptchaConfig = $this->validationConfigResolver->getByType($reCaptchaType);
 
         try {
