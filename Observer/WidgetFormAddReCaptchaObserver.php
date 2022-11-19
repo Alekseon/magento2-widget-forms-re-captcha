@@ -31,6 +31,10 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
             );
             $recaptchaBlock->setWidgetForm($form);
 
+            if (!$recaptchaBlock->isRecaptchaEnabled()) {
+                return;
+            }
+
             $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
             $reCaptchaComponents = $reCaptchaJSON['components'];
 

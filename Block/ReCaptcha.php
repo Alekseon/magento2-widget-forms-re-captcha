@@ -77,9 +77,14 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
     /**
      * @return bool
      */
-    protected function isReCaptchaEnabled()
+    public function isReCaptchaEnabled()
     {
         if ($this->getRecaptchaType()) {
+
+            if ($this->getRecaptchaType() == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+                return $this->captchaConfigProvider->isRequired();
+            }
+
             return true;
         }
         return false;
@@ -103,32 +108,26 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
      */
     public function getJsLayout()
     {
+        $components = [];
+
         if ($this->getRecaptchaType() == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
-            $this->jsLayout =
-                [
-                    'components' =>
-                        [
-                            'recaptcha' => [
-                                'component' => 'Alekseon_WidgetFormsReCaptcha/js/view/checkout/widgetFormCaptcha',
-                                'formId' => 'alekseon_widget_form_' . $this->widgetForm->getId(),
-                                'configSource' => 'alekseon_widget_form',
-                                'alekseon_widget_form' => [
-                                    'captcha' => $this->captchaConfigProvider->getConfig(),
-                                ],
-                            ]
-                        ]
-                ];
+            $components['recaptcha'] = [
+                'component' => 'Alekseon_WidgetFormsReCaptcha/js/view/widgetFormCaptcha',
+                'formId' => 'alekseon_widget_form_' . $this->widgetForm->getId(),
+                'configSource' => 'alekseon_widget_form',
+                'alekseon_widget_form' => [
+                    'captcha' => $this->captchaConfigProvider->getConfig(),
+                ],
+            ];
         } else {
-            $this->jsLayout =
-                [
-                    'components' =>
-                        [
-                            'recaptcha' => [
-                                'component' => 'Magento_ReCaptchaFrontendUi/js/reCaptcha'
-                            ]
-                        ]
-                ];
+            $components['recaptcha'] = [
+                'component' => 'Magento_ReCaptchaFrontendUi/js/reCaptcha'
+            ];
         }
+
+        $this->jsLayout = [
+            'components' => $components,
+        ];
 
         return parent::getJsLayout();
     }

@@ -65,7 +65,7 @@ class CaptchaConfigProvider
     /**
      * @return bool
      */
-    protected function isRequired()
+    public function isRequired()
     {
         if (!$this->captchaHelper->getConfig('enable')) {
             return false;
