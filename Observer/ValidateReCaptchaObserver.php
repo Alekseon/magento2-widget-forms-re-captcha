@@ -5,6 +5,8 @@
  */
 namespace Alekseon\WidgetFormsReCaptcha\Observer;
 
+use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
+use Magento\Captcha\Observer\CaptchaStringResolver;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\InputException;
@@ -29,10 +31,6 @@ class ValidateReCaptchaObserver implements ObserverInterface
      */
     protected $captchaValidator;
     /**
-     * @var IsCaptchaEnabledInterface
-     */
-    protected $isCaptchaEnabled;
-    /**
      * @var ErrorProcessor
      */
     protected $errorProcessor;
@@ -40,27 +38,30 @@ class ValidateReCaptchaObserver implements ObserverInterface
      * @var \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver|ValidationConfigResolverInterface
      */
     protected $validationConfigResolver;
+    /**
+     * @var \Magento\Captcha\Helper\Data
+     */
+    protected $captchaHelper;
 
     /**
      * ValidateReCaptchaObserver constructor.
      * @param CaptchaResponseResolverInterface $captchaResponseResolver
      * @param ValidatorInterface $captchaValidator
-     * @param IsCaptchaEnabledInterface $isCaptchaEnabled
      * @param \Alekseon\WidgetFormsReCaptcha\Model\Ajax\ErrorProcessor $errorProcessor
      * @param \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver $validationConfigResolver
      */
     public function __construct(
         CaptchaResponseResolverInterface $captchaResponseResolver,
         ValidatorInterface $captchaValidator,
-        IsCaptchaEnabledInterface $isCaptchaEnabled,
         \Alekseon\WidgetFormsReCaptcha\Model\Ajax\ErrorProcessor $errorProcessor,
-        \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver $validationConfigResolver
+        \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver $validationConfigResolver,
+        \Magento\Captcha\Helper\Data $captchaHelper
     ) {
         $this->captchaResponseResolver = $captchaResponseResolver;
         $this->captchaValidator = $captchaValidator;
-        $this->isCaptchaEnabled = $isCaptchaEnabled;
         $this->errorProcessor = $errorProcessor;
         $this->validationConfigResolver = $validationConfigResolver;
+        $this->captchaHelper = $captchaHelper;
     }
 
     /**
@@ -71,30 +72,66 @@ class ValidateReCaptchaObserver implements ObserverInterface
     {
         $controller = $observer->getControllerAction();
         $form = $controller->getForm();
-        if ($reCaptchaType = $form->getRecaptchaType()) {
+        $reCaptchaType = $form->getRecaptchaType();
 
+        if ($reCaptchaType) {
             $request = $controller->getRequest();
             $response = $controller->getResponse();
-
-            $reCaptchaConfig = $this->validationConfigResolver->getByType($reCaptchaType);
-
-            try {
-                $reCaptchaResponse = $this->captchaResponseResolver->resolve($request);
-            } catch (InputException $e) {
-                $this->errorProcessor->processError(
-                    $response,
-                    $reCaptchaConfig->getValidationFailureMessage()
-                );
-                return;
+            if ($reCaptchaType == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+                $this->validateMagentoCaptcha($form, $request, $response);
+            } else {
+                $this->validateUiCaptcha($form, $request, $response);
             }
+        }
+    }
 
-            $validationResult = $this->captchaValidator->isValid($reCaptchaResponse, $reCaptchaConfig);
-            if (false === $validationResult->isValid()) {
-                $this->errorProcessor->processError(
-                    $response,
-                    $reCaptchaConfig->getValidationFailureMessage()
-                );
-            }
+    /**
+     * @param $controller
+     */
+    protected function validateMagentoCaptcha($form, $request, $response)
+    {
+        $formId = 'alekseon_widget_form_' . $form->getId();
+        $captchaModel = $this->captchaHelper->getCaptcha($formId);
+
+        if (!$this->captchaHelper->getConfig('enable')) {
+            return false;
+        }
+
+        if (!$captchaModel->isCorrect($request->getPost("captcha_string"))) {
+            $this->errorProcessor->processError(
+                $response,
+                __('Incorrect CAPTCHA')
+            );
+        }
+    }
+
+    /**
+     * @param $form
+     * @param $request
+     * @param $response
+     * @throws InputException
+     */
+    protected function validateUiCaptcha($form, $request, $response)
+    {
+        $reCaptchaType = $form->getRecaptchaType();
+        $reCaptchaConfig = $this->validationConfigResolver->getByType($reCaptchaType);
+
+        try {
+            $reCaptchaResponse = $this->captchaResponseResolver->resolve($request);
+        } catch (InputException $e) {
+            $this->errorProcessor->processError(
+                $response,
+                $reCaptchaConfig->getValidationFailureMessage()
+            );
+            return;
+        }
+
+        $validationResult = $this->captchaValidator->isValid($reCaptchaResponse, $reCaptchaConfig);
+        if (false === $validationResult->isValid()) {
+            $this->errorProcessor->processError(
+                $response,
+                $reCaptchaConfig->getValidationFailureMessage()
+            );
         }
     }
 }

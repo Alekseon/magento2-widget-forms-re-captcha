@@ -3,16 +3,30 @@
  * http://www.alekseon.com/
  */
 define([
-    'Magento_ReCaptchaFrontendUi/js/registry'
+    'Magento_ReCaptchaFrontendUi/js/registry',
+    'Magento_Captcha/js/model/captchaList'
 ], function (
-    reCaptchaRegistry
+    reCaptchaRegistry,
+    magentoCaptchaList
 ) {
     'use strict';
 
     return function (Component) {
         return Component.extend({
+
             onComplete: function () {
                 this.resetRecaptcha();
+                this._super();
+            },
+
+            onSuccess: function () {
+                var currentCaptcha;
+
+                currentCaptcha = magentoCaptchaList.getCaptchaByFormId('alekseon_widget_form_' + this.formId);
+                if (currentCaptcha != null) {
+                    currentCaptcha.refresh();
+                }
+
                 this._super();
             },
 

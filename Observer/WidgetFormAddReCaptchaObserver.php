@@ -23,7 +23,6 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
         if ($form->getRecaptchaType()) {
             $dataObject = $observer->getEvent()->getDataObject();
             $widgetBlock = $observer->getEvent()->getWidgetBlock();
-
             $children = $dataObject->getUiComponentChildren();
 
             $recaptchaBlock = $widgetBlock->addChild(
@@ -31,6 +30,10 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
                 \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
             );
             $recaptchaBlock->setWidgetForm($form);
+
+            if (!$recaptchaBlock->isRecaptchaEnabled()) {
+                return;
+            }
 
             $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
             $reCaptchaComponents = $reCaptchaJSON['components'];

@@ -11,6 +11,8 @@ namespace Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source;
  */
 class ReCaptchaType extends \Alekseon\AlekseonEav\Model\Attribute\Source\AbstractSource
 {
+    const MAGENTO_CAPTCHA_VALUE = 'magento_captcha';
+
     /**
      * @var \Magento\ReCaptchaAdminUi\Model\OptionSource\Type
      */
@@ -27,15 +29,27 @@ class ReCaptchaType extends \Alekseon\AlekseonEav\Model\Attribute\Source\Abstrac
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public function getOptions()
+    public function getUiRecaptchaOptions()
     {
         $recaptchaTypes = $this->recaptchaTypeSource->toOptionArray();
         $options = [];
         foreach($recaptchaTypes as $option) {
             $options[$option['value']] = $option['label'];
         }
+        return $options;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getOptions()
+    {
+        $options = [];
+        $options[self::MAGENTO_CAPTCHA_VALUE] = __('Magento Captcha');
+        $uiRecaptchaOptions = $this->getUiRecaptchaOptions();
+        $options = array_merge($options, $uiRecaptchaOptions);
         return $options;
     }
 }
