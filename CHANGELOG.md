@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
-## [Unreleased]
+## [100.1.0] - 2022-11-19
 ### Added
 - Native Magento Captcha
 
