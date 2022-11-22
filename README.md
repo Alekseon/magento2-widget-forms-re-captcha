@@ -16,6 +16,7 @@ This module is adding reCAPTCHA service to protect widget forms from fraud.
 More in wiki:
 <br>
 <ul>
+<li>https://github.com/Alekseon/magento2-widget-forms/wiki</li>
 <li>https://github.com/Alekseon/magento2-widget-forms/wiki/reCAPTCHA-Validation</li>
 </ul>
 </p>
