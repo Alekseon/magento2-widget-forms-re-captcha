@@ -1,8 +1,8 @@
 <h1 align="center">  
 <br/>
-  <img src="https://i.imgur.com/b2oclHA.png" alt="Custom Forms Builder" width="400">  
+  <img src="https://i.imgur.com/b2oclHA.png" alt="Custom Forms ReCaptcha" width="400">  
   <br>  
-  Alekseon_CustomFormsEmailNotification
+  Alekseon_CustomFormsReCaptcha
   <br>  
 </h1>  
 <p align="center">
