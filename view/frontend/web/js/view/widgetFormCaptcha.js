@@ -27,6 +27,7 @@ function (defaultCaptcha, captchaList, Captcha) {
             captcha = Captcha(captchaData);
             captcha.setIsVisible(true);
             this.setCurrentCaptcha(captcha);
+            captcha.refresh();
             captchaList.add(captcha);
         }
     });
