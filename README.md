@@ -2,7 +2,7 @@
 <br/>
   <img src="https://i.imgur.com/b2oclHA.png" alt="Custom Forms ReCaptcha" width="400">  
   <br>  
-  Alekseon_CustomFormsReCaptcha
+  Alekseon_WidgetFormsReCaptcha
   <br>  
 </h1>  
 <p align="center">
