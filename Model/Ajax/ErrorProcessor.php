@@ -3,6 +3,8 @@
  * Copyright © Alekseon sp. z o.o.
  * http://www.alekseon.com/
  */
+declare(strict_types=1);
+
 namespace Alekseon\WidgetFormsReCaptcha\Model\Ajax;
 
 use Magento\Framework\App\Action\Action;
@@ -51,8 +53,7 @@ class ErrorProcessor
 
         $jsonPayload = $this->serializer->serialize($this->getResponseData($message));
 
-        $this->setResponseCode($response)
-            ->representJson($jsonPayload);
+        $response->representJson($jsonPayload);
     }
 
     /**
@@ -65,14 +66,5 @@ class ErrorProcessor
             'errors' => true,
             'message' => $message,
         ];
-    }
-
-    /**
-     *
-     */
-    protected function setResponseCode($response)
-    {
-        $response->setHttpResponseCode(500);
-        return $response;
     }
 }

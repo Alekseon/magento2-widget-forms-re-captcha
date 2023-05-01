@@ -3,6 +3,8 @@
  * Copyright © Alekseon sp. z o.o.
  * http://www.alekseon.com/
  */
+declare(strict_types=1);
+
 namespace Alekseon\WidgetFormsReCaptcha\Observer;
 
 use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
@@ -25,23 +27,23 @@ class ValidateReCaptchaObserver implements ObserverInterface
     /**
      * @var CaptchaResponseResolverInterface
      */
-    protected $captchaResponseResolver;
+    private $captchaResponseResolver;
     /**
      * @var ValidatorInterface
      */
-    protected $captchaValidator;
+    private $captchaValidator;
     /**
      * @var ErrorProcessor
      */
-    protected $errorProcessor;
+    private $errorProcessor;
     /**
      * @var \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver|ValidationConfigResolverInterface
      */
-    protected $validationConfigResolver;
+    private $validationConfigResolver;
     /**
      * @var \Magento\Captcha\Helper\Data
      */
-    protected $captchaHelper;
+    private $captchaHelper;
 
     /**
      * ValidateReCaptchaObserver constructor.

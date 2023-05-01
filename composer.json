@@ -2,10 +2,10 @@
     "name": "alekseon/widget-forms-re-captcha",
     "description": "N/A",
     "require": {
-        "alekseon/widget-forms": "^102.1.4"
+        "alekseon/widget-forms": "^102.2.4"
     },
     "type": "magento2-module",
-    "version": "100.1.1",
+    "version": "100.1.2",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

@@ -3,6 +3,8 @@
  * Copyright © Alekseon sp. z o.o.
  * http://www.alekseon.com/
  */
+declare(strict_types=1);
+
 namespace Alekseon\WidgetFormsReCaptcha\Model;
 
 /**
@@ -14,12 +16,12 @@ class CaptchaConfigProvider
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    protected $storeManager;
+    private $storeManager;
 
     /**
      * @var \Magento\Captcha\Helper\Data
      */
-    protected $captchaHelper;
+    private $captchaHelper;
 
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
