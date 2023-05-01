@@ -21,7 +21,7 @@ class UiConfigResolver extends \Magento\ReCaptchaUi\Model\UiConfigResolver
     /**
      * @var array
      */
-    protected $uiConfigProviders;
+    private $uiConfigProviders;
 
     /**
      * UiConfigResolver constructor.
@@ -31,7 +31,7 @@ class UiConfigResolver extends \Magento\ReCaptchaUi\Model\UiConfigResolver
      */
     public function __construct(CaptchaTypeResolverInterface $captchaTypeResolver, array $uiConfigProviders = [])
     {
-        foreach ($uiConfigProviders as $t => $uiConfigProvider) {
+        foreach ($uiConfigProviders as $uiConfigProvider) {
             if (!$uiConfigProvider instanceof UiConfigProviderInterface) {
                 throw new InputException(
                     __('UI config provider must implement %1', [ UiConfigResolverInterface::class])

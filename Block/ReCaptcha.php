@@ -23,15 +23,15 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
     /**
      * @var
      */
-    protected $widgetForm;
+    private $widgetForm;
     /**
      * @var \Alekseon\WidgetFormsReCaptcha\Model\UiConfigResolver
      */
-    protected $captchaUiConfigResolver;
+    private $captchaUiConfigResolver;
     /**
      * @var CaptchaConfigProvider
      */
-    protected $captchaConfigProvider;
+    private $captchaConfigProvider;
 
     /**
      * ReCaptcha constructor.
@@ -66,14 +66,11 @@ class ReCaptcha extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magento
     }
 
     /**
-     * @return bool
+     * @return string | bool
      */
-    protected function getRecaptchaType()
+    private function getRecaptchaType()
     {
-        if ($this->widgetForm) {
-            return $this->widgetForm->getRecaptchaType();
-        }
-        return false;
+        return $this->widgetForm ? $this->widgetForm->getRecaptchaType() : false;
     }
 
     /**
