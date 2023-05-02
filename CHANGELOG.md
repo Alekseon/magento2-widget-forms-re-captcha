@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
-## [Unreleased]
+## [100.1.2] - 2023-05-01
 ### Changed
 - code quality improvements
 - replaced InstallData with DataPatches
