@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
+## [100.1.3] - 2023-05-04
+### Fixed
+- fix for coding standard test
+
 ## [100.1.2] - 2023-05-01
 ### Changed
 - code quality improvements
