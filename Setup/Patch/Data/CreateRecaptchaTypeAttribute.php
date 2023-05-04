@@ -75,6 +75,8 @@ class CreateRecaptchaTypeAttribute implements DataPatchInterface, PatchRevertabl
         );
 
         $this->moduleDataSetup->getConnection()->endSetup();
+
+        return $this;
     }
 
         /**
