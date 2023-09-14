@@ -14,17 +14,10 @@ function (defaultCaptcha, captchaList, Captcha) {
     return defaultCaptcha.extend({
         /** @inheritdoc */
         initialize: function () {
-            var self = this,
-                captchaData,
-                currentCaptcha;
-
             this._super();
-
-            captchaData = this.alekseon_widget_form.captcha;
-
-            var captcha;
+            let captchaData = this.alekseon_widget_form.captcha;
             captchaData.formId = this.formId;
-            captcha = Captcha(captchaData);
+            let captcha = Captcha(captchaData);
             captcha.setIsVisible(true);
             this.setCurrentCaptcha(captcha);
             captcha.refresh();

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Alekseon\WidgetFormsReCaptcha\Observer;
 
+use Alekseon\WidgetForms\Block\WidgetForm;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
@@ -23,11 +24,10 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
     {
         $form = $observer->getEvent()->getForm();
         if ($form->getRecaptchaType()) {
-            $dataObject = $observer->getEvent()->getDataObject();
+            /** @var WidgetForm $widgetBlock */
             $widgetBlock = $observer->getEvent()->getWidgetBlock();
-            $children = $dataObject->getUiComponentChildren();
 
-            $recaptchaBlock = $widgetBlock->addChild(
+             $recaptchaBlock = $widgetBlock->addChild(
                 'recaptcha',
                 \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
             );
@@ -37,14 +37,7 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
                 return;
             }
 
-            $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
-            $reCaptchaComponents = $reCaptchaJSON['components'];
-
-            foreach ($reCaptchaComponents as $componentId => $component) {
-                $children[$componentId] = $component;
-            }
-
-            $dataObject->setUiComponentChildren($children);
+            $widgetBlock->setChild('recaptcha.container', $recaptchaBlock);
         }
     }
 }
