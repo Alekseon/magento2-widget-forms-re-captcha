@@ -26,8 +26,9 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
         if ($form->getRecaptchaType()) {
             /** @var WidgetForm $widgetBlock */
             $widgetBlock = $observer->getEvent()->getWidgetBlock();
+            $lastTab = $widgetBlock->getTabBlock($widgetBlock->getTabsCounter());
 
-             $recaptchaBlock = $widgetBlock->addChild(
+            $recaptchaBlock = $widgetBlock->addChild(
                 'recaptcha',
                 \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
             );
@@ -37,7 +38,7 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
                 return;
             }
 
-            $widgetBlock->setChild('recaptcha.container', $recaptchaBlock);
+            $lastTab->setChild('recaptcha.container', $recaptchaBlock);
         }
     }
 }
