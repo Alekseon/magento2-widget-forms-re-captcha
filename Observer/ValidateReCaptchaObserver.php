@@ -53,6 +53,10 @@ class ValidateReCaptchaObserver implements ObserverInterface
      * @var ErrorMessageConfigInterface
      */
     private $errorMessageConfig;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * ValidateReCaptchaObserver constructor.
