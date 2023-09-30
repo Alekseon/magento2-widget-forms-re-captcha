@@ -3,8 +3,10 @@
  * http://www.alekseon.com/
  */
 define([
+    'jquery',
     'Magento_Captcha/js/model/captchaList'
 ], function (
+    $,
     magentoCaptchaList
 ) {
     'use strict';
@@ -12,7 +14,13 @@ define([
     return function (widget) {
         $.widget('mage.alekseonWidgetForm', widget, {
             onComplete: function () {
-                console.log('mage.alekseonWidgetForm');
+                var currentCaptcha;
+                currentCaptcha = magentoCaptchaList.getCaptchaByFormId(this.options.formId);
+                if (currentCaptcha != null) {
+                    currentCaptcha.refresh();
+                }
+
+                this._super();
             }
         });
 
