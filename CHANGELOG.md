@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
+## [100.2.0] - 2023-12-03
+### Changed
+- refactoring - fit to widget forms in version 102.4.0
+
 ## [100.1.3] - 2023-05-04
 ### Fixed
 - fix for coding standard test
