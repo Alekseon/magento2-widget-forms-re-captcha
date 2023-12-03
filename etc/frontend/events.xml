@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="alekseon_widget_form_ui_component_children">
+    <event name="alekseon_widget_form_prepare_layout">
         <observer name="Alekseon_WidgetFormsReCaptcha::add_recaptcha" instance="Alekseon\WidgetFormsReCaptcha\Observer\WidgetFormAddReCaptchaObserver" />
     </event>
     <event name="controller_action_predispatch_Alekseon_WidgetForms_form_submit">
