@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Alekseon\WidgetFormsReCaptcha\Model\Ajax;
 
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\ActionFlag;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 
@@ -49,10 +49,8 @@ class ErrorProcessor
      */
     public function processError(ResponseInterface $response, $message)
     {
-        $this->actionFlag->set('', Action::FLAG_NO_DISPATCH, true);
-
+        $this->actionFlag->set('', ActionInterface::FLAG_NO_DISPATCH, true);
         $jsonPayload = $this->serializer->serialize($this->getResponseData($message));
-
         $response->representJson($jsonPayload);
     }
 
