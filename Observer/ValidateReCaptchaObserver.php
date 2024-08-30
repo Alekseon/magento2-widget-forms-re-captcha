@@ -11,7 +11,6 @@ use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\InputException;
-use Magento\ReCaptchaCustomer\Model\AjaxLogin\ErrorProcessor;
 use Magento\ReCaptchaUi\Model\CaptchaResponseResolverInterface;
 use Magento\ReCaptchaUi\Model\ErrorMessageConfigInterface;
 use Magento\ReCaptchaUi\Model\ValidationConfigResolverInterface;
@@ -34,7 +33,7 @@ class ValidateReCaptchaObserver implements ObserverInterface
      */
     private $captchaValidator;
     /**
-     * @var ErrorProcessor
+     * @var \Alekseon\WidgetFormsReCaptcha\Model\Ajax\ErrorProcessor
      */
     private $errorProcessor;
     /**
@@ -107,7 +106,10 @@ class ValidateReCaptchaObserver implements ObserverInterface
     }
 
     /**
-     * @param $controller
+     * @param $form
+     * @param $request
+     * @param $response
+     * @return void
      */
     protected function validateMagentoCaptcha($form, $request, $response)
     {
@@ -115,7 +117,7 @@ class ValidateReCaptchaObserver implements ObserverInterface
         $captchaModel = $this->captchaHelper->getCaptcha($formId);
 
         if (!$this->captchaHelper->getConfig('enable')) {
-            return false;
+            return;
         }
 
         $captcha = $request->getPost('captcha');
