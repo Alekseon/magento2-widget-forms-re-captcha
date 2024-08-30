@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Alekseon\WidgetFormsReCaptcha\Observer;
 
+use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
@@ -22,29 +23,24 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         $form = $observer->getEvent()->getForm();
-        if ($form->getRecaptchaType()) {
-            $dataObject = $observer->getEvent()->getDataObject();
-            $widgetBlock = $observer->getEvent()->getWidgetBlock();
-            $children = $dataObject->getUiComponentChildren();
 
-            $recaptchaBlock = $widgetBlock->addChild(
-                'recaptcha',
-                \Alekseon\WidgetFormsReCaptcha\Block\ReCaptcha::class
-            );
-            $recaptchaBlock->setWidgetForm($form);
-
-            if (!$recaptchaBlock->isRecaptchaEnabled()) {
-                return;
-            }
-
-            $reCaptchaJSON = json_decode($recaptchaBlock->getJsLayout(), true);
-            $reCaptchaComponents = $reCaptchaJSON['components'];
-
-            foreach ($reCaptchaComponents as $componentId => $component) {
-                $children[$componentId] = $component;
-            }
-
-            $dataObject->setUiComponentChildren($children);
+        if (!$form->getRecaptchaType()) {
+            return;
         }
+
+        if ($form->getRecaptchaType() == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+            $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\DefaultCaptcha::class;
+        } else {
+            $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\ReCaptchaUi::class;
+        }
+
+        $widgetBlock = $observer->getEvent()->getWidgetBlock();
+        $lastTab = $widgetBlock->getTabBlock($widgetBlock->getTabsCounter());
+        $recaptchaBlock = $widgetBlock->addChild(
+            'recaptcha',
+            $recaptchaBlockClass,
+        );
+        $recaptchaBlock->setWidgetForm($form);
+        $lastTab->setChild('recaptcha.container', $recaptchaBlock);
     }
 }
