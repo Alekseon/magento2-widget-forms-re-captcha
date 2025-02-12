@@ -14,10 +14,9 @@ namespace Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source;
 class ReCaptchaType extends \Alekseon\AlekseonEav\Model\Attribute\Source\AbstractSource
 {
     const MAGENTO_CAPTCHA_VALUE = 'magento_captcha';
-    const CLOUDFLARE_CAPTCHA_VALUE = 'cloudflare_turnstile';
 
     /**
-     * @var \Magento\ReCaptchaAdminUi\Model\OptionSource\Type
+     * @var \Magento\ReCaptchaAdminUi\Model\OptionSource
      */
     protected $recaptchaTypeSource;
     protected $moduleManager;
@@ -56,11 +55,6 @@ class ReCaptchaType extends \Alekseon\AlekseonEav\Model\Attribute\Source\Abstrac
         $options[self::MAGENTO_CAPTCHA_VALUE] = __('Magento Captcha');
         $uiRecaptchaOptions = $this->getUiRecaptchaOptions();
         $options = array_merge($options, $uiRecaptchaOptions);
-
-        if ($this->moduleManager->isEnabled('PixelOpen_CloudflareTurnstile')) {
-            $options[self::CLOUDFLARE_CAPTCHA_VALUE] = __('Cloudflare Turnstile');
-        }
-
         return $options;
     }
 }
