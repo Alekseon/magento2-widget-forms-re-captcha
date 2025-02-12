@@ -16,18 +16,21 @@ class ReCaptchaType extends \Alekseon\AlekseonEav\Model\Attribute\Source\Abstrac
     const MAGENTO_CAPTCHA_VALUE = 'magento_captcha';
 
     /**
-     * @var \Magento\ReCaptchaAdminUi\Model\OptionSource\Type
+     * @var \Magento\ReCaptchaAdminUi\Model\OptionSource
      */
     protected $recaptchaTypeSource;
+    protected $moduleManager;
 
     /**
      * ReCaptchaType constructor.
      * @param \Magento\ReCaptchaAdminUi\Model\OptionSource $recaptchaTypeSource
      */
     public function __construct(
-        \Magento\ReCaptchaAdminUi\Model\OptionSource $recaptchaTypeSource
+        \Magento\ReCaptchaAdminUi\Model\OptionSource $recaptchaTypeSource,
+        \Magento\Framework\Module\Manager $moduleManager
     ) {
         $this->recaptchaTypeSource = $recaptchaTypeSource;
+        $this->moduleManager = $moduleManager;
     }
 
     /**

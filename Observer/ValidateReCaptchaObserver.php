@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Alekseon\WidgetFormsReCaptcha\Observer;
 
+use Alekseon\CustomFormsBuilder\Model\Form;
+use Alekseon\WidgetForms\Controller\Form\Submit;
 use Alekseon\WidgetFormsReCaptcha\Model\Attribute\Source\ReCaptchaType;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -61,8 +63,12 @@ class ValidateReCaptchaObserver implements ObserverInterface
      * ValidateReCaptchaObserver constructor.
      * @param CaptchaResponseResolverInterface $captchaResponseResolver
      * @param ValidatorInterface $captchaValidator
+     * @param ErrorMessageConfigInterface $errorMessageConfig
+     * @param ValidationErrorMessagesProvider $validationErrorMessagesProvider
      * @param \Alekseon\WidgetFormsReCaptcha\Model\Ajax\ErrorProcessor $errorProcessor
      * @param \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver $validationConfigResolver
+     * @param \Magento\Captcha\Helper\Data $captchaHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CaptchaResponseResolverInterface $captchaResponseResolver,
@@ -92,16 +98,33 @@ class ValidateReCaptchaObserver implements ObserverInterface
     {
         $controller = $observer->getControllerAction();
         $form = $controller->getForm();
-        $reCaptchaType = $form->getRecaptchaType();
+        $this->validateCaptcha($form, $controller);
+    }
 
-        if ($reCaptchaType) {
-            $request = $controller->getRequest();
-            $response = $controller->getResponse();
-            if ($reCaptchaType == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
+    /**
+     * @param Form $form
+     * @param Submit $controller
+     * @param bool $isValidated
+     * @return void
+     * @throws InputException
+     */
+    public function validateCaptcha(Form $form, Submit $controller, bool $isValidated = false)
+    {
+        if ($isValidated) {
+            return;
+        }
+        $reCaptchaType = $form->getRecaptchaType();
+        if (!$reCaptchaType) {
+            return;
+        }
+        $request = $controller->getRequest();
+        $response = $controller->getResponse();
+        switch ($reCaptchaType) {
+            case ReCaptchaType::MAGENTO_CAPTCHA_VALUE:
                 $this->validateMagentoCaptcha($form, $request, $response);
-            } else {
+                break;
+            default:
                 $this->validateUiCaptcha($form, $request, $response);
-            }
         }
     }
 
@@ -161,7 +184,7 @@ class ValidateReCaptchaObserver implements ObserverInterface
      * @param string $sourceKey
      * @return void
      */
-    private function processError($response, array $errorMessages, string $sourceKey)
+    public function processError($response, array $errorMessages, string $sourceKey)
     {
         $validationErrorText = $this->errorMessageConfig->getValidationFailureMessage();
         $technicalErrorText = $this->errorMessageConfig->getTechnicalFailureMessage();
