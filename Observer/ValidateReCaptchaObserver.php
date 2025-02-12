@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class AjaxSendFriendObserver
  * @package Manolo\ReCaptcha\Observer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ValidateReCaptchaObserver implements ObserverInterface
 {
