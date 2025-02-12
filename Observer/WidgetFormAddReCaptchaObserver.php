@@ -28,10 +28,15 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
             return;
         }
 
-        if ($form->getRecaptchaType() == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
-            $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\DefaultCaptcha::class;
-        } else {
-            $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\ReCaptchaUi::class;
+        switch ($form->getRecaptchaType()) {
+            case ReCaptchaType::MAGENTO_CAPTCHA_VALUE:
+                $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\DefaultCaptcha::class;
+                break;
+            case ReCaptchaType::CLOUDFLARE_CAPTCHA_VALUE:
+                $recaptchaBlockClass = '\PixelOpen\CloudflareTurnstile\Block\Turnstile';
+                break;
+            default:
+                $recaptchaBlockClass = \Alekseon\WidgetFormsReCaptcha\Block\ReCaptchaUi::class;
         }
 
         $widgetBlock = $observer->getEvent()->getWidgetBlock();
@@ -40,6 +45,11 @@ class WidgetFormAddReCaptchaObserver implements ObserverInterface
             'recaptcha',
             $recaptchaBlockClass,
         );
+
+        if ($form->getRecaptchaType() == ReCaptchaType::CLOUDFLARE_CAPTCHA_VALUE) {
+            $recaptchaBlock->setAction('alekseon_widget_form');
+        }
+
         $recaptchaBlock->setWidgetForm($form);
         $lastTab->setChild('recaptcha.container', $recaptchaBlock);
     }

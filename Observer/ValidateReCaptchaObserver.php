@@ -61,8 +61,12 @@ class ValidateReCaptchaObserver implements ObserverInterface
      * ValidateReCaptchaObserver constructor.
      * @param CaptchaResponseResolverInterface $captchaResponseResolver
      * @param ValidatorInterface $captchaValidator
+     * @param ErrorMessageConfigInterface $errorMessageConfig
+     * @param ValidationErrorMessagesProvider $validationErrorMessagesProvider
      * @param \Alekseon\WidgetFormsReCaptcha\Model\Ajax\ErrorProcessor $errorProcessor
      * @param \Alekseon\WidgetFormsReCaptcha\Model\ValidationConfigResolver $validationConfigResolver
+     * @param \Magento\Captcha\Helper\Data $captchaHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CaptchaResponseResolverInterface $captchaResponseResolver,
@@ -97,10 +101,14 @@ class ValidateReCaptchaObserver implements ObserverInterface
         if ($reCaptchaType) {
             $request = $controller->getRequest();
             $response = $controller->getResponse();
-            if ($reCaptchaType == ReCaptchaType::MAGENTO_CAPTCHA_VALUE) {
-                $this->validateMagentoCaptcha($form, $request, $response);
-            } else {
-                $this->validateUiCaptcha($form, $request, $response);
+            switch ($reCaptchaType) {
+                case ReCaptchaType::MAGENTO_CAPTCHA_VALUE:
+                    $this->validateMagentoCaptcha($form, $request, $response);
+                    break;
+                case ReCaptchaType::CLOUDFLARE_CAPTCHA_VALUE:
+                    break;
+                default:
+                    $this->validateUiCaptcha($form, $request, $response);
             }
         }
     }
