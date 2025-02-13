@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
-## [100.2.2] - 2025-02-12
+## [100.2.3] - 2025-02-12
 ### Changed
 - changes for compatibility with Alekseon_WidgetFormsCloudflareTurnstile
 
