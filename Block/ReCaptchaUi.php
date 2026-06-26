@@ -1,5 +1,5 @@
 <?php
-/**kjjjjj0
+/**
  * Copyright © Alekseon sp. z o.o.
  * http://www.alekseon.com/
  */
