@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 ### Removed
 
+## [100.2.4] - 2026-06-29
+### Changed
+- fix recaptcha v2
+
 ## [100.2.3] - 2025-02-12
 ### Changed
 - changes for compatibility with Alekseon_WidgetFormsCloudflareTurnstile

@@ -53,6 +53,9 @@ class ReCaptchaUi extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magen
     public function setWidgetForm($widgetForm)
     {
         $this->widgetForm = $widgetForm;
+        if ($widgetForm) {
+            $this->setData('form_id', 'alekseon-widget-form-' . $widgetForm->getId());
+        }
         return $this;
     }
 
@@ -62,6 +65,22 @@ class ReCaptchaUi extends \Magento\ReCaptchaUi\Block\ReCaptcha implements \Magen
     private function getRecaptchaType()
     {
         return $this->widgetForm ? $this->widgetForm->getRecaptchaType() : false;
+    }
+
+    /**
+     * Use type-specific template when available (e.g. recaptcha_invisible.phtml on Hyva).
+     * Falls back to the default recaptcha.phtml on Luma.
+     */
+    public function getTemplate(): string
+    {
+        $type = $this->getRecaptchaType();
+        if ($type) {
+            $typeTemplate = "Magento_ReCaptchaFrontendUi::recaptcha_{$type}.phtml";
+            if ($this->getTemplateFile($typeTemplate)) {
+                return $typeTemplate;
+            }
+        }
+        return parent::getTemplate();
     }
 
     /**
